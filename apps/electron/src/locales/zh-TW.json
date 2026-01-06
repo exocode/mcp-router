@@ -169,6 +169,17 @@
     },
     "serverNameRequired": "请输入伺服器名稱"
   },
+  "serverConsole": {
+    "title": "伺服器控制台",
+    "description": "查看所有執行中的 MCP 伺服器的控制台輸出",
+    "selectServer": "選擇伺服器",
+    "allServers": "所有伺服器",
+    "loading": "載入中...",
+    "noLogs": "無可用的控制台輸出。啟動伺服器以查看其輸出。",
+    "noLogsForServer": "此伺服器無可用的控制台輸出。",
+    "autoScroll": "自動滾動",
+    "export": "匯出"
+  },
   "serverList": {
     "title": "MCP 伺服器",
     "count": "{{count}} 個 MCP 伺服器",
