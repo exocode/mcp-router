@@ -11,6 +11,7 @@ import { rendererConfig } from "./webpack.renderer.config";
 import { MakerDMG } from "@electron-forge/maker-dmg";
 import { MakerDeb } from "@electron-forge/maker-deb";
 import * as path from "path";
+import { postMake } from "./forge-hooks";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
@@ -128,6 +129,9 @@ const config: ForgeConfig = {
       },
     },
   ],
+  hooks: {
+    postMake,
+  },
 };
 
 export default config;
