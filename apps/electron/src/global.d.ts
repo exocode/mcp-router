@@ -2,6 +2,12 @@
  * Augment the global Window interface so TypeScript knows about "window.electronAPI".
  */
 
+// Declare module for PNG imports
+declare module "*.png" {
+  const value: string;
+  export default value;
+}
+
 import type {
   AppSettings,
   MCPTool,
