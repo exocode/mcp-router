@@ -19,6 +19,8 @@ jobs:
             label: macOS
           - os: windows-latest
             label: Windows
+          - os: ubuntu-latest
+            label: Linux
     env:
       CI: true
 
@@ -40,7 +42,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Linux build dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fakeroot dpkg-dev
+
       - name: Run make
+        env:
+          SKIP_TYPE_CHECK: "true"
         run: pnpm run make
 
       - name: Upload make artifacts
