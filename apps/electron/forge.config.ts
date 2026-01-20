@@ -61,7 +61,7 @@ const config: ForgeConfig = {
     }),
     new MakerDMG(
       {
-        name: "MCP Router",
+        name: "MCP-Router",
         format: "ULFO",
         icon: "./public/images/icon/icon.icns",
       },
