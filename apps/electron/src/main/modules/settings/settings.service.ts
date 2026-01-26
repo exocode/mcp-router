@@ -111,7 +111,6 @@ function createLinuxAutostartEntry(showWindowOnStartup: boolean): void {
   if (process.platform !== "linux") return;
 
   try {
-
     const autostartDir = path.join(os.homedir(), ".config", "autostart");
     if (!fs.existsSync(autostartDir)) {
       fs.mkdirSync(autostartDir, { recursive: true });
@@ -126,8 +125,22 @@ function createLinuxAutostartEntry(showWindowOnStartup: boolean): void {
     const possibleIconPaths = [
       path.join(app.getAppPath(), "public", "images", "icon", "icon.png"),
       path.join(__dirname, "../../../../public/images/icon/icon.png"),
-      path.join(process.resourcesPath, "app.asar", "public", "images", "icon", "icon.png"),
-      path.join(process.resourcesPath, "app", "public", "images", "icon", "icon.png"),
+      path.join(
+        process.resourcesPath,
+        "app.asar",
+        "public",
+        "images",
+        "icon",
+        "icon.png",
+      ),
+      path.join(
+        process.resourcesPath,
+        "app",
+        "public",
+        "images",
+        "icon",
+        "icon.png",
+      ),
     ];
 
     for (const iconFile of possibleIconPaths) {

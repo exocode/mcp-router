@@ -64,7 +64,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getConsoleLogs: async (serverId?: string) => {
     try {
       if (serverId) {
-        const logs = await ipcRenderer.invoke("console:getServerLogs", serverId);
+        const logs = await ipcRenderer.invoke(
+          "console:getServerLogs",
+          serverId,
+        );
         return Array.isArray(logs) ? logs : [];
       } else {
         const logs = await ipcRenderer.invoke("console:getAllLogs");

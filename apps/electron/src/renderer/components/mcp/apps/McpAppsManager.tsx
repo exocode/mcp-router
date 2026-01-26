@@ -54,14 +54,16 @@ const McpAppsManager: React.FC = () => {
   const { projects, list: listProjects } = useProjectStore();
 
   // 現在のテーマを判定（system の場合はシステム設定を確認）
-  const [currentTheme, setCurrentTheme] = React.useState<"light" | "dark">(() => {
-    if (!theme || theme === "system") {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-    }
-    return theme === "dark" ? "dark" : "light";
-  });
+  const [currentTheme, setCurrentTheme] = React.useState<"light" | "dark">(
+    () => {
+      if (!theme || theme === "system") {
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+      }
+      return theme === "dark" ? "dark" : "light";
+    },
+  );
 
   // テーマ変更を監視
   useEffect(() => {
@@ -79,7 +81,9 @@ const McpAppsManager: React.FC = () => {
   }, [theme]);
 
   // アイコンを取得（テーマ対応）
-  const getAppIcon = (icon: string | { light: string; dark: string } | undefined): string | undefined => {
+  const getAppIcon = (
+    icon: string | { light: string; dark: string } | undefined,
+  ): string | undefined => {
     if (!icon) return undefined;
     if (typeof icon === "string") return icon;
     if (typeof icon === "object" && icon !== null) {
@@ -412,7 +416,7 @@ const McpAppsManager: React.FC = () => {
                       {(() => {
                         const iconContent = getAppIcon(app.icon);
                         if (!iconContent) return null;
-                        
+
                         try {
                           // Check if it's SVG content (starts with <svg) or image URL (PNG, etc.)
                           if (iconContent.trim().startsWith("<svg")) {
@@ -435,12 +439,15 @@ const McpAppsManager: React.FC = () => {
                           } else {
                             // It's an image URL (PNG, etc.)
                             // Handle both absolute URLs and relative paths
-                            const iconSrc = iconContent.startsWith("http") || iconContent.startsWith("data:") || iconContent.startsWith("/")
-                              ? iconContent
-                              : iconContent.startsWith("file://")
-                              ? iconContent
-                              : `/${iconContent}`;
-                            
+                            const iconSrc =
+                              iconContent.startsWith("http") ||
+                              iconContent.startsWith("data:") ||
+                              iconContent.startsWith("/")
+                                ? iconContent
+                                : iconContent.startsWith("file://")
+                                  ? iconContent
+                                  : `/${iconContent}`;
+
                             return (
                               <img
                                 src={iconSrc}
@@ -451,17 +458,28 @@ const McpAppsManager: React.FC = () => {
                                   maxHeight: "24px",
                                 }}
                                 onError={(e) => {
-                                  console.error(`Failed to load icon for ${app.name}:`, iconSrc, "Original:", iconContent);
+                                  console.error(
+                                    `Failed to load icon for ${app.name}:`,
+                                    iconSrc,
+                                    "Original:",
+                                    iconContent,
+                                  );
                                   e.currentTarget.style.display = "none";
                                 }}
                                 onLoad={() => {
-                                  console.log(`Successfully loaded icon for ${app.name}:`, iconSrc);
+                                  console.log(
+                                    `Successfully loaded icon for ${app.name}:`,
+                                    iconSrc,
+                                  );
                                 }}
                               />
                             );
                           }
                         } catch (error) {
-                          console.error(`Error rendering icon for ${app.name}:`, error);
+                          console.error(
+                            `Error rendering icon for ${app.name}:`,
+                            error,
+                          );
                           return null;
                         }
                       })()}

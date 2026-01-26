@@ -328,10 +328,10 @@ export class MCPServerManager {
       client.close();
       this.clients.delete(id);
       server.status = "stopped";
-      
+
       // Show stopped notification
       showServerStatusNotification(server.name, "stopped");
-      
+
       return true;
     } catch (error) {
       server.status = "error";

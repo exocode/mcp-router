@@ -69,7 +69,8 @@ const Settings: React.FC = () => {
     // Handle cases like 'en-US' -> 'en', 'ja-JP' -> 'ja', 'zh-CN' -> 'zh', 'zh-TW' -> 'zh-TW'
     if (currentLang.startsWith("en")) return "en";
     if (currentLang.startsWith("ja")) return "ja";
-    if (currentLang === "zh-TW" || currentLang.startsWith("zh-TW")) return "zh-TW";
+    if (currentLang === "zh-TW" || currentLang.startsWith("zh-TW"))
+      return "zh-TW";
     if (currentLang.startsWith("zh")) return "zh";
     return "en";
   };

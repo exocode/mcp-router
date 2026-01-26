@@ -1,6 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@mcp_router/ui";
+import {
+  Card,
+  Button,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@mcp_router/ui";
 import { IconTrash, IconRefresh, IconDownload } from "@tabler/icons-react";
 import { useServerStore } from "@/renderer/stores";
 
@@ -33,7 +41,7 @@ const ServerConsoleViewer: React.FC = () => {
       const result = await window.electronAPI.getConsoleLogs(
         selectedServerId === "all" ? undefined : selectedServerId,
       );
-      
+
       // Handle both array and object return types
       if (selectedServerId === "all") {
         // Should be an object with serverId keys
@@ -89,7 +97,8 @@ const ServerConsoleViewer: React.FC = () => {
           if (autoScroll && logContainerRef.current) {
             requestAnimationFrame(() => {
               if (logContainerRef.current) {
-                logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+                logContainerRef.current.scrollTop =
+                  logContainerRef.current.scrollHeight;
               }
             });
           }
@@ -113,7 +122,8 @@ const ServerConsoleViewer: React.FC = () => {
       // Use requestAnimationFrame to ensure DOM is updated
       requestAnimationFrame(() => {
         if (logContainerRef.current) {
-          logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+          logContainerRef.current.scrollTop =
+            logContainerRef.current.scrollHeight;
         }
       });
     }
@@ -159,7 +169,9 @@ const ServerConsoleViewer: React.FC = () => {
   // Get logs to display
   const displayLogs =
     selectedServerId === "all"
-      ? Object.values(logs).flat().sort((a, b) => a.timestamp.localeCompare(b.timestamp))
+      ? Object.values(logs)
+          .flat()
+          .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
       : logs[selectedServerId] || [];
 
   return (
@@ -180,7 +192,9 @@ const ServerConsoleViewer: React.FC = () => {
       <div className="flex gap-4 mb-4 items-center">
         <Select value={selectedServerId} onValueChange={setSelectedServerId}>
           <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder={t("serverConsole.selectServer", "Select Server")} />
+            <SelectValue
+              placeholder={t("serverConsole.selectServer", "Select Server")}
+            />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">
@@ -194,7 +208,12 @@ const ServerConsoleViewer: React.FC = () => {
           </SelectContent>
         </Select>
 
-        <Button variant="outline" size="sm" onClick={loadLogs} disabled={loading}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={loadLogs}
+          disabled={loading}
+        >
           <IconRefresh className="h-4 w-4 mr-2" />
           {t("common.refresh", "Refresh")}
         </Button>

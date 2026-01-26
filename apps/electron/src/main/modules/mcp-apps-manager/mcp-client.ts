@@ -138,7 +138,7 @@ export class MCPClient {
         const transportAny = transport as any;
         if (transportAny._process || transportAny.process) {
           const childProcess = transportAny._process || transportAny.process;
-          
+
           // Capture stdout if available
           if (childProcess.stdout) {
             childProcess.stdout.on("data", (data: Buffer) => {
@@ -167,23 +167,26 @@ export class MCPClient {
           });
 
           // Handle process exit
-          childProcess.on("exit", (code: number | null, signal: string | null) => {
-            if (code !== null) {
-              consoleService.addLog(
-                serverId,
-                serverName,
-                "stderr",
-                `Process exited with code ${code}\n`,
-              );
-            } else if (signal) {
-              consoleService.addLog(
-                serverId,
-                serverName,
-                "stderr",
-                `Process exited with signal ${signal}\n`,
-              );
-            }
-          });
+          childProcess.on(
+            "exit",
+            (code: number | null, signal: string | null) => {
+              if (code !== null) {
+                consoleService.addLog(
+                  serverId,
+                  serverName,
+                  "stderr",
+                  `Process exited with code ${code}\n`,
+                );
+              } else if (signal) {
+                consoleService.addLog(
+                  serverId,
+                  serverName,
+                  "stderr",
+                  `Process exited with signal ${signal}\n`,
+                );
+              }
+            },
+          );
         } else {
           // If we can't access the child process, at least log the connection
           consoleService.addLog(

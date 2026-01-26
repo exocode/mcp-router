@@ -272,12 +272,12 @@ export class McpAppsManagerService extends SingletonService<
     if (definition?.iconKey) {
       const icon = ICON_MAP[definition.iconKey];
       if (!icon) return undefined;
-      
+
       // テーマ対応アイコンの場合、オブジェクトをそのまま返す
       if (typeof icon === "object" && "light" in icon && "dark" in icon) {
         return icon;
       }
-      
+
       // 通常のアイコンの場合
       return icon as string;
     }
@@ -617,7 +617,7 @@ export class McpAppsManagerService extends SingletonService<
 
       // アイコンを取得（テーマ対応）
       const icon = this.getStandardAppIcon(name);
-      
+
       return {
         name,
         installed,
@@ -632,7 +632,7 @@ export class McpAppsManagerService extends SingletonService<
     } catch {
       // アイコンを取得（テーマ対応）
       const icon = this.getStandardAppIcon(name);
-      
+
       return {
         name,
         installed: false,

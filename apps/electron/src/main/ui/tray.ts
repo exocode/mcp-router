@@ -9,7 +9,8 @@ let tray: Tray | null = null;
 
 function normalizeTrayIcon(image: NativeImage): NativeImage {
   // Linux typically needs 22x22 or 24x24 for better visibility
-  const size = process.platform === "darwin" ? 20 : process.platform === "linux" ? 22 : 16;
+  const size =
+    process.platform === "darwin" ? 20 : process.platform === "linux" ? 22 : 16;
   const resized = image.resize({
     width: size,
     height: size,
@@ -33,7 +34,10 @@ function getTrayIcon(): NativeImage {
         return normalizeTrayIcon(image);
       }
     } catch (error) {
-      console.warn("Failed to load tray icon from file, using fallback:", error);
+      console.warn(
+        "Failed to load tray icon from file, using fallback:",
+        error,
+      );
     }
   }
 

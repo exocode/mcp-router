@@ -1,8 +1,14 @@
 import { ipcMain, BrowserWindow } from "electron";
-import { getConsoleService, ConsoleLogEntry } from "./mcp-server-console.service";
+import {
+  getConsoleService,
+  ConsoleLogEntry,
+} from "./mcp-server-console.service";
 
 // Store handlers for each webContents to avoid duplicate subscriptions
-const handlerMap = new Map<number, Map<string | undefined, (logEntry: ConsoleLogEntry) => void>>();
+const handlerMap = new Map<
+  number,
+  Map<string | undefined, (logEntry: ConsoleLogEntry) => void>
+>();
 
 /**
  * Setup IPC handlers for console log management

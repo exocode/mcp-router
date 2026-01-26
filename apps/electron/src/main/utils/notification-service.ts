@@ -25,10 +25,10 @@ function getNotificationMessages(
   const lang = locale.startsWith("zh-TW")
     ? "zh-TW"
     : locale.startsWith("zh")
-    ? "zh"
-    : locale.startsWith("ja")
-    ? "ja"
-    : "en";
+      ? "zh"
+      : locale.startsWith("ja")
+        ? "ja"
+        : "en";
 
   switch (status) {
     case "running":
@@ -114,18 +114,25 @@ export function showServerStatusNotification(
     return;
   }
 
-  const { title, body } = getNotificationMessages(status, serverName, errorMessage);
+  const { title, body } = getNotificationMessages(
+    status,
+    serverName,
+    errorMessage,
+  );
 
-    // Try to get icon path
-    let iconPath: string | undefined;
-    try {
-      const iconFile = path.join(__dirname, "../../../public/images/icon/icon.png");
-      if (fs.existsSync(iconFile)) {
-        iconPath = iconFile;
-      }
-    } catch {
-      // Ignore icon loading errors
+  // Try to get icon path
+  let iconPath: string | undefined;
+  try {
+    const iconFile = path.join(
+      __dirname,
+      "../../../public/images/icon/icon.png",
+    );
+    if (fs.existsSync(iconFile)) {
+      iconPath = iconFile;
     }
+  } catch {
+    // Ignore icon loading errors
+  }
 
   const notification = new Notification({
     title,
