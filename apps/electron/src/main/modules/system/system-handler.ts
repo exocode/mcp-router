@@ -20,6 +20,11 @@ export function setupSystemHandlers(): void {
     return process.platform;
   });
 
+  // App version (from package.json / Electron app)
+  ipcMain.handle("system:getAppVersion", () => {
+    return app.getVersion();
+  });
+
   // Check if a command exists in user shell environment
   ipcMain.handle("system:commandExists", async (_, command: string) => {
     const result = await commandExists(command);

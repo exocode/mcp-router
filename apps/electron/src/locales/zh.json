@@ -143,7 +143,9 @@
     "loadExternalMCPConfigs": "从外部应用程序加载 MCP 配置",
     "loadExternalMCPConfigsDescription": "允许 MCP Router 从其他应用程序（如 Claude for Desktop）导入服务器配置",
     "analytics": "发送使用情况分析",
-    "analyticsDescription": "发送匿名使用数据以帮助改进应用"
+    "analyticsDescription": "发送匿名使用数据以帮助改进应用",
+    "about": "关于",
+    "versionLabel": "版本"
   },
   "mcpApps": {
     "title": "MCP 应用集成",

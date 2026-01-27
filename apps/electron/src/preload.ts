@@ -163,6 +163,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // System
   getPlatform: () => ipcRenderer.invoke("system:getPlatform"),
+  getAppVersion: () => ipcRenderer.invoke("system:getAppVersion") as Promise<string>,
 
   // Workspace Management
   listWorkspaces: () => ipcRenderer.invoke("workspace:list"),

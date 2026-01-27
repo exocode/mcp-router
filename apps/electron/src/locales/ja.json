@@ -142,7 +142,9 @@
     "autoUpdate": "自動アップデート",
     "autoUpdateDescription": "アプリのアップデートを自動でダウンロード・インストールします",
     "showWindowOnStartup": "OS起動時にウィンドウを表示",
-    "showWindowOnStartupDescription": "コンピューター起動時にMCP Routerのウィンドウを表示します。無効にするとバックグラウンドで起動します。"
+    "showWindowOnStartupDescription": "コンピューター起動時にMCP Routerのウィンドウを表示します。無効にするとバックグラウンドで起動します。",
+    "about": "バージョン情報",
+    "versionLabel": "バージョン"
   },
   "mcpApps": {
     "title": "MCPアプリ連携",

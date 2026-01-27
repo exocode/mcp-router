@@ -143,7 +143,9 @@
     "autoUpdate": "Enable automatic updates",
     "autoUpdateDescription": "Automatically download and install app updates",
     "showWindowOnStartup": "Show main window at system startup",
-    "showWindowOnStartupDescription": "Display MCP Router when your computer boots. Disable to start in the background."
+    "showWindowOnStartupDescription": "Display MCP Router when your computer boots. Disable to start in the background.",
+    "about": "About",
+    "versionLabel": "Version"
   },
   "mcpApps": {
     "title": "MCP App Integrations",

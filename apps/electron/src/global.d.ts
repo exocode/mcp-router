@@ -167,6 +167,10 @@ declare global {
       }>;
       restartApp: () => Promise<boolean>;
 
+      // App version
+      getAppVersion: () => Promise<string>;
+      getPlatform: () => Promise<"darwin" | "win32" | "linux">;
+
       // Workspace Management
       listWorkspaces: () => Promise<any[]>;
       createWorkspace: (config: any) => Promise<any>;

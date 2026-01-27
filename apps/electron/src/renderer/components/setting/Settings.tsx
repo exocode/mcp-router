@@ -47,6 +47,9 @@ const Settings: React.FC = () => {
   const [feedback, setFeedback] = useState("");
   const [isSendingFeedback, setIsSendingFeedback] = useState(false);
 
+  // App version (display only)
+  const [appVersion, setAppVersion] = useState<string>("");
+
   // Zustand stores
   const { theme, setTheme } = useThemeStore();
   const {
@@ -83,6 +86,13 @@ const Settings: React.FC = () => {
       unsubscribe();
     };
   }, [checkAuthStatus, subscribeToAuthChanges]);
+
+  // Load app version for display
+  useEffect(() => {
+    if (window.electronAPI?.getAppVersion) {
+      window.electronAPI.getAppVersion().then(setAppVersion).catch(() => {});
+    }
+  }, []);
 
   // Load settings on mount
   useEffect(() => {
@@ -694,6 +704,23 @@ const Settings: React.FC = () => {
               {isSendingFeedback ? t("common.loading") : t("common.send")}
             </Button>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* About / Version */}
+      <Card className="border-2">
+        <CardHeader>
+          <CardTitle className="text-xl">
+            {t("settings.about", "About")}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            {t("settings.versionLabel", "Version")}:{" "}
+            <span className="font-medium text-foreground">
+              {appVersion || "—"}
+            </span>
+          </p>
         </CardContent>
       </Card>
     </div>
