@@ -122,36 +122,39 @@ export class MCPClient {
           `Starting server: ${server.command} ${(server.args || []).join(" ")}\n`,
         );
 
-        // Create transport - StdioClientTransport will spawn the process internally
+        // Create transport - StdioClientTransport will spawn the process internally.
+        // Use stderr: 'pipe' so we can capture stderr for the Server Console (default is 'inherit' which is not readable).
         const transport = new StdioClientTransport({
           command: server.command,
           args: server.args,
           env: mergedEnv,
+          stderr: "pipe",
         });
 
         // Try to access the child process from the transport after connection
         // StdioClientTransport may store it in a private property
         await client.connect(transport);
 
-        // Try to access child process from transport's internal properties
-        // This is a workaround since StdioClientTransport doesn't expose the child process
         const transportAny = transport as any;
+
+        // Capture stderr via transport.stderr (PassThrough). When stderr is 'pipe', the SDK pipes
+        // child stderr to this stream; we must read from it, not from childProcess.stderr.
+        if (transportAny.stderr) {
+          transportAny.stderr.on("data", (data: Buffer | string) => {
+            const content = typeof data === "string" ? data : data.toString();
+            consoleService.addLog(serverId, serverName, "stderr", content);
+          });
+        }
+
+        // Try to access child process from transport's internal properties
         if (transportAny._process || transportAny.process) {
           const childProcess = transportAny._process || transportAny.process;
 
-          // Capture stdout if available
+          // Capture stdout if available (transport reads this for JSON-RPC; we attach an extra listener to get a copy)
           if (childProcess.stdout) {
             childProcess.stdout.on("data", (data: Buffer) => {
               const content = data.toString();
               consoleService.addLog(serverId, serverName, "stdout", content);
-            });
-          }
-
-          // Capture stderr if available
-          if (childProcess.stderr) {
-            childProcess.stderr.on("data", (data: Buffer) => {
-              const content = data.toString();
-              consoleService.addLog(serverId, serverName, "stderr", content);
             });
           }
 
