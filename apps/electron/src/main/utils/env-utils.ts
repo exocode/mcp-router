@@ -72,6 +72,8 @@ export async function run(cmd: string, args: string[] = [], useShell = false) {
 }
 
 // ユーザのシェルで読み込まれる環境変数を取得する非同期関数
+const SHELL_ENV_TIMEOUT_MS = 5_000;
+
 export async function getUserShellEnv() {
   // Windowsの場合、シェル初期化ファイルの問題がないのでそのまま返す
   if (process.platform === "win32") {
@@ -82,6 +84,9 @@ export async function getUserShellEnv() {
     // ログインシェル( -l ) + 対話モード( -i )を実行し、envを取得する
     // `DISABLE_AUTO_UPDATE` は oh-my-zsh の自動アップデートを防ぐための例
     const shell = detectDefaultShell();
+    // Bound the shell invocation. Slow or hanging shell init (Powerlevel10k
+    // instant prompt, oh-my-zsh auto-update, conda init with network) would
+    // otherwise stall every MCP server start indefinitely.
     const { stdout } = await execa(
       shell,
       ["-ilc", `echo -n "${DELIMITER}"; env; echo -n "${DELIMITER}"`],
@@ -89,6 +94,7 @@ export async function getUserShellEnv() {
         env: {
           DISABLE_AUTO_UPDATE: "true",
         },
+        timeout: SHELL_ENV_TIMEOUT_MS,
       },
     );
 
@@ -105,7 +111,12 @@ export async function getUserShellEnv() {
 
     return shellEnv;
   } catch (error) {
-    // シェルの起動に失敗した場合は、Electron / Node.js の既存の環境変数を返す
+    // シェルの起動に失敗 / タイムアウトした場合は、Electron / Node.js の既存の環境変数を返す
+    console.log(
+      `[env-utils] getUserShellEnv failed/timed out, falling back to process.env: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
     return { ...process.env };
   }
 }
