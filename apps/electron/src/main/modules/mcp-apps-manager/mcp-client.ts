@@ -2,6 +2,9 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import process from "node:process";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { getUserShellEnv } from "@/main/utils/env-utils";
 import { logError, logInfo } from "@/main/utils/logger";
 import {
@@ -10,7 +13,43 @@ import {
   MCPInputParam,
 } from "@mcp_router/shared";
 import { getConsoleService } from "@/main/modules/mcp-server-console/mcp-server-console.service";
-import { spawn, ChildProcess } from "child_process";
+
+function resolveExecutablePath(
+  command: string,
+  env: Record<string, string>,
+): string {
+  if (!command) return command;
+
+  const isAbsoluteOrRelativePath =
+    command.includes("/") || command.includes("\\") || command.startsWith(".");
+  if (isAbsoluteOrRelativePath) {
+    return command;
+  }
+
+  const pathKey = Object.keys(env).find((key) => key.toLowerCase() === "path");
+  const pathValue = pathKey ? env[pathKey] : undefined;
+  const pathEntries = (pathValue || "").split(
+    process.platform === "win32" ? ";" : ":",
+  );
+
+  const candidateNames =
+    process.platform === "win32"
+      ? [command, `${command}.cmd`, `${command}.exe`, `${command}.bat`]
+      : [command];
+
+  for (const dir of pathEntries) {
+    if (!dir) continue;
+
+    for (const candidate of candidateNames) {
+      const fullPath = join(dir, candidate);
+      if (existsSync(fullPath)) {
+        return fullPath;
+      }
+    }
+  }
+
+  return command;
+}
 
 /**
  * MCPクライアント接続機能を提供するクラス
@@ -107,6 +146,10 @@ export class MCPClient {
           ...cleanUserEnvs,
           ...server.env,
         };
+        const resolvedCommand = resolveExecutablePath(
+          server.command,
+          mergedEnv,
+        );
 
         // Use Stdio transport for local servers
         // For local servers, we need to capture stdout/stderr
@@ -119,13 +162,13 @@ export class MCPClient {
           serverId,
           serverName,
           "stdout",
-          `Starting server: ${server.command} ${(server.args || []).join(" ")}\n`,
+          `Starting server: ${resolvedCommand} ${(server.args || []).join(" ")}\n`,
         );
 
         // Create transport - StdioClientTransport will spawn the process internally.
         // Use stderr: 'pipe' so we can capture stderr for the Server Console (default is 'inherit' which is not readable).
         const transport = new StdioClientTransport({
-          command: server.command,
+          command: resolvedCommand,
           args: server.args,
           env: mergedEnv,
           stderr: "pipe",
