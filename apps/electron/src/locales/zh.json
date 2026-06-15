@@ -106,7 +106,9 @@
     "serverStopped": "服务器停止成功",
     "errorDetails": "错误详情",
     "configRequired": "需要配置",
-    "requiredParamsNotSet": "未设置必需参数"
+    "requiredParamsNotSet": "未设置必需参数",
+    "filterByStatus": "按状态筛选",
+    "statusAll": "全部"
   },
   "settings": {
     "accountAndPlan": "账户与套餐",

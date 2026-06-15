@@ -15,6 +15,7 @@ import {
   IconServer,
   IconPlus,
   IconUpload,
+  IconFilter,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/renderer/utils/tailwind-utils";
@@ -123,12 +124,26 @@ const Home: React.FC = () => {
     setSelectedProjectId,
   } = useProjectStore();
 
+  const [isHomeSettingsOpen, setIsHomeSettingsOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "running" | "error" | "stopped"
+  >("all");
+
   // Filter servers based on search query, project selection and sort them
   const filteredServers = React.useMemo(() => {
     const base = servers
       .filter((server) =>
         server.name.toLowerCase().includes(searchQuery.toLowerCase()),
       )
+      .filter((server) => {
+        if (statusFilter === "all") return true;
+        if (statusFilter === "running")
+          return server.status === "running" || server.status === "starting";
+        if (statusFilter === "error") return server.status === "error";
+        if (statusFilter === "stopped")
+          return server.status === "stopped" || server.status === "stopping";
+        return true;
+      })
       .sort((a, b) => a.name.localeCompare(b.name));
 
     if (selectedProjectId === UNASSIGNED_PROJECT_ID) {
@@ -138,9 +153,7 @@ const Home: React.FC = () => {
       return base.filter((s) => s.projectId === selectedProjectId);
     }
     return base;
-  }, [servers, searchQuery, selectedProjectId]);
-
-  const [isHomeSettingsOpen, setIsHomeSettingsOpen] = useState(false);
+  }, [servers, searchQuery, selectedProjectId, statusFilter]);
 
   // State for error modal
   const [errorModalOpen, setErrorModalOpen] = useState(false);
@@ -331,6 +344,38 @@ const Home: React.FC = () => {
             <Grid3X3 className="h-4 w-4" />
           </Button>
         </div>
+        <Select
+          value={statusFilter}
+          onValueChange={(v) =>
+            setStatusFilter(v as "all" | "running" | "error" | "stopped")
+          }
+        >
+          <SelectTrigger
+            className="h-8 w-8 p-0 flex items-center justify-center"
+            title={t("serverList.filterByStatus", "Filter by status")}
+          >
+            <IconFilter
+              className={cn(
+                "h-4 w-4",
+                statusFilter !== "all" ? "text-primary" : "",
+              )}
+            />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">
+              {t("serverList.statusAll", "All")}
+            </SelectItem>
+            <SelectItem value="running">
+              {t("serverList.status.running", "Running")}
+            </SelectItem>
+            <SelectItem value="error">
+              {t("serverList.status.error", "Error")}
+            </SelectItem>
+            <SelectItem value="stopped">
+              {t("serverList.status.stopped", "Stopped")}
+            </SelectItem>
+          </SelectContent>
+        </Select>
         <Button
           variant="outline"
           size="sm"

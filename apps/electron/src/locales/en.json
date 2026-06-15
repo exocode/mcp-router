@@ -106,7 +106,9 @@
     "serverStopped": "Server stopped successfully",
     "errorDetails": "Error Details",
     "configRequired": "Config Required",
-    "requiredParamsNotSet": "Required parameters are not configured"
+    "requiredParamsNotSet": "Required parameters are not configured",
+    "filterByStatus": "Filter by status",
+    "statusAll": "All"
   },
   "settings": {
     "accountAndPlan": "Account & Plan",

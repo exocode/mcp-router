@@ -201,7 +201,9 @@
     "stop": "停止",
     "errorDetails": "錯誤詳情",
     "configRequired": "需要設定",
-    "requiredParamsNotSet": "未設定必需參數"
+    "requiredParamsNotSet": "未設定必需參數",
+    "filterByStatus": "依狀態篩選",
+    "statusAll": "全部"
   },
   "settings": {
     "title": "設定",

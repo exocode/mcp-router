@@ -105,7 +105,9 @@
     "serverStopped": "サーバーを停止しました",
     "errorDetails": "エラーの詳細",
     "configRequired": "設定が必要",
-    "requiredParamsNotSet": "必須パラメータが設定されていません"
+    "requiredParamsNotSet": "必須パラメータが設定されていません",
+    "filterByStatus": "ステータスでフィルター",
+    "statusAll": "すべて"
   },
   "settings": {
     "accountAndPlan": "アカウントとプラン",
