@@ -28,8 +28,6 @@ interface ConsoleLogEntry {
 
 const MAX_LOGS_PER_SERVER = 1000;
 const LOG_FLUSH_INTERVAL_MS = 100;
-const LOG_ROW_HEIGHT = 24;
-const LOG_OVERSCAN = 30;
 
 const trimLogs = (entries: ConsoleLogEntry[]) =>
   entries.length > MAX_LOGS_PER_SERVER
@@ -44,8 +42,6 @@ const ServerConsoleViewer: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const logContainerRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(true);
-  const [scrollTop, setScrollTop] = useState(0);
-  const [viewportHeight, setViewportHeight] = useState(0);
   const pendingLogsRef = useRef<Record<string, ConsoleLogEntry[]>>({});
   const flushTimeoutRef = useRef<number | null>(null);
 
@@ -182,29 +178,6 @@ const ServerConsoleViewer: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const container = logContainerRef.current;
-    if (!container) {
-      return;
-    }
-
-    const updateViewportHeight = () => {
-      setViewportHeight(container.clientHeight);
-    };
-
-    updateViewportHeight();
-
-    const resizeObserver = new window.ResizeObserver(() => {
-      updateViewportHeight();
-    });
-
-    resizeObserver.observe(container);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
-
   // Clear logs for selected server
   const handleClearLogs = async () => {
     try {
@@ -252,18 +225,6 @@ const ServerConsoleViewer: React.FC = () => {
         : logs[selectedServerId] || [],
     [logs, selectedServerId],
   );
-
-  const totalHeight = displayLogs.length * LOG_ROW_HEIGHT;
-  const visibleRowCount = Math.ceil(viewportHeight / LOG_ROW_HEIGHT);
-  const startIndex = Math.max(
-    0,
-    Math.floor(scrollTop / LOG_ROW_HEIGHT) - LOG_OVERSCAN,
-  );
-  const endIndex = Math.min(
-    displayLogs.length,
-    startIndex + visibleRowCount + LOG_OVERSCAN * 2,
-  );
-  const visibleLogs = displayLogs.slice(startIndex, endIndex);
 
   return (
     <div className="p-6 h-full flex flex-col">
@@ -336,7 +297,6 @@ const ServerConsoleViewer: React.FC = () => {
       <Card className="flex-1 overflow-hidden p-0">
         <div
           ref={logContainerRef}
-          onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
           className="h-full overflow-auto p-4 bg-black text-green-400 font-mono text-sm"
           style={{ fontFamily: "monospace" }}
         >
@@ -357,14 +317,8 @@ const ServerConsoleViewer: React.FC = () => {
                   )}
             </div>
           ) : (
-            <div
-              style={{
-                height: totalHeight,
-                position: "relative",
-              }}
-            >
-              {visibleLogs.map((log, index) => {
-                const absoluteIndex = startIndex + index;
+            <div>
+              {displayLogs.map((log, index) => {
                 const timestamp = new Date(log.timestamp).toLocaleTimeString();
                 const isError = log.type === "stderr";
                 const serverLabel =
@@ -372,18 +326,9 @@ const ServerConsoleViewer: React.FC = () => {
 
                 return (
                   <div
-                    key={`${log.serverId}-${absoluteIndex}-${log.timestamp}`}
-                    className={isError ? "text-red-400" : "text-green-400"}
-                    style={{
-                      position: "absolute",
-                      top: absoluteIndex * LOG_ROW_HEIGHT,
-                      left: 0,
-                      right: 0,
-                      height: LOG_ROW_HEIGHT,
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
-                    }}
+                    key={`${log.serverId}-${index}-${log.timestamp}`}
+                    className={`mb-0.5 ${isError ? "text-red-400" : "text-green-400"}`}
+                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-all" }}
                   >
                     <span className="text-gray-500">{timestamp}</span>
                     {serverLabel && (
