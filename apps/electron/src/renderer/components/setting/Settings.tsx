@@ -33,6 +33,7 @@ const Settings: React.FC = () => {
     useState<boolean>(true);
   const [analyticsEnabled, setAnalyticsEnabled] = useState<boolean>(true);
   const [autoUpdateEnabled, setAutoUpdateEnabled] = useState<boolean>(true);
+  const [launchAtLogin, setLaunchAtLogin] = useState<boolean>(true);
   const [showWindowOnStartup, setShowWindowOnStartup] = useState<boolean>(true);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
 
@@ -102,6 +103,7 @@ const Settings: React.FC = () => {
         setLoadExternalMCPConfigs(settings.loadExternalMCPConfigs ?? true);
         setAnalyticsEnabled(settings.analyticsEnabled ?? true);
         setAutoUpdateEnabled(settings.autoUpdateEnabled ?? true);
+        setLaunchAtLogin(settings.launchAtLogin ?? true);
         setShowWindowOnStartup(settings.showWindowOnStartup ?? true);
       } catch {
         console.log("Failed to load settings, using defaults");
@@ -220,6 +222,24 @@ const Settings: React.FC = () => {
     } catch (error) {
       console.error("Failed to save auto update settings:", error);
       setAutoUpdateEnabled(!checked);
+    } finally {
+      setIsSavingSettings(false);
+    }
+  };
+
+  // Handle launch-at-login toggle
+  const handleLaunchAtLoginToggle = async (checked: boolean) => {
+    setLaunchAtLogin(checked);
+    setIsSavingSettings(true);
+    try {
+      const currentSettings = await platformAPI.settings.get();
+      await platformAPI.settings.save({
+        ...currentSettings,
+        launchAtLogin: checked,
+      });
+    } catch (error) {
+      console.error("Failed to save launch-at-login settings:", error);
+      setLaunchAtLogin(!checked);
     } finally {
       setIsSavingSettings(false);
     }
@@ -608,6 +628,23 @@ const Settings: React.FC = () => {
             />
           </div>
 
+          {/* Launch at Login */}
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <label className="text-sm font-medium">
+                {t("settings.launchAtLogin")}
+              </label>
+              <p className="text-xs text-muted-foreground">
+                {t("settings.launchAtLoginDescription")}
+              </p>
+            </div>
+            <Switch
+              checked={launchAtLogin}
+              onCheckedChange={handleLaunchAtLoginToggle}
+              disabled={isSavingSettings}
+            />
+          </div>
+
           {/* Show Window on Startup */}
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
@@ -621,7 +658,7 @@ const Settings: React.FC = () => {
             <Switch
               checked={showWindowOnStartup}
               onCheckedChange={handleStartupVisibilityToggle}
-              disabled={isSavingSettings}
+              disabled={isSavingSettings || !launchAtLogin}
             />
           </div>
 

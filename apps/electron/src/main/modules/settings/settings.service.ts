@@ -61,7 +61,10 @@ export class SettingsService extends SingletonService<
     try {
       const result = SettingsRepository.getInstance().saveSettings(settings);
       if (result) {
-        applyLoginItemSettings(settings.showWindowOnStartup ?? true);
+        applyLoginItemSettings(
+          settings.launchAtLogin ?? true,
+          settings.showWindowOnStartup ?? true,
+        );
         applyThemeSettings(settings.theme);
       }
       return result;
@@ -79,23 +82,36 @@ export function getSettingsService(): SettingsService {
 }
 
 /**
- * OS起動時のウィンドウ表示設定に応じてログイン項目設定を更新
+ * OS起動時の自動起動・ウィンドウ表示設定に応じてログイン項目設定を更新
+ *
+ * @param launchAtLogin OS起動時にアプリを自動起動するか（macOS/Windows/Linux 対応）
+ * @param showWindowOnStartup 自動起動時にメインウィンドウを表示するか
  */
-export function applyLoginItemSettings(showWindowOnStartup: boolean): void {
+export function applyLoginItemSettings(
+  launchAtLogin: boolean,
+  showWindowOnStartup: boolean,
+): void {
   try {
     const loginItemOptions: Electron.Settings = {
-      openAtLogin: true,
+      openAtLogin: launchAtLogin,
     };
 
     if (process.platform === "darwin") {
-      loginItemOptions.openAsHidden = !showWindowOnStartup;
+      // 自動起動が無効なら openAsHidden は無意味
+      loginItemOptions.openAsHidden = launchAtLogin && !showWindowOnStartup;
     } else if (process.platform === "win32") {
+      // Windows: ネイティブのレジストリ Run キーへ登録。
+      // openAtLogin=false なら Electron が登録を解除する。
       loginItemOptions.args = showWindowOnStartup ? [] : ["--hidden"];
     } else if (process.platform === "linux") {
       // Linux: use args to control window visibility
       loginItemOptions.args = showWindowOnStartup ? [] : ["--hidden"];
-      // Also create/update autostart desktop file for better Linux compatibility
-      createLinuxAutostartEntry(showWindowOnStartup);
+      // Also create/update (or remove) autostart desktop file for better Linux compatibility
+      if (launchAtLogin) {
+        createLinuxAutostartEntry(showWindowOnStartup);
+      } else {
+        removeLinuxAutostartEntry();
+      }
     }
 
     app.setLoginItemSettings(loginItemOptions);
@@ -169,6 +185,27 @@ StartupNotify=false
     fs.writeFileSync(desktopFilePath, desktopFileContent, { mode: 0o644 });
   } catch (error) {
     console.error("Failed to create Linux autostart entry:", error);
+  }
+}
+
+/**
+ * Remove the Linux autostart desktop entry (when auto-launch is disabled)
+ */
+function removeLinuxAutostartEntry(): void {
+  if (process.platform !== "linux") return;
+
+  try {
+    const desktopFilePath = path.join(
+      os.homedir(),
+      ".config",
+      "autostart",
+      "mcp-router.desktop",
+    );
+    if (fs.existsSync(desktopFilePath)) {
+      fs.unlinkSync(desktopFilePath);
+    }
+  } catch (error) {
+    console.error("Failed to remove Linux autostart entry:", error);
   }
 }
 

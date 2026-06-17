@@ -144,6 +144,8 @@
     "analyticsDescription": "アプリの改善のため、匿名の使用状況データを送信します",
     "autoUpdate": "自動アップデート",
     "autoUpdateDescription": "アプリのアップデートを自動でダウンロード・インストールします",
+    "launchAtLogin": "OS起動時に自動起動",
+    "launchAtLoginDescription": "ログイン時にMCP Routerを自動起動し、IDEやエージェントがすぐに接続できるようにします。macOS・Windows・Linuxに対応しています。",
     "showWindowOnStartup": "OS起動時にウィンドウを表示",
     "showWindowOnStartupDescription": "コンピューター起動時にMCP Routerのウィンドウを表示します。無効にするとバックグラウンドで起動します。",
     "about": "バージョン情報",

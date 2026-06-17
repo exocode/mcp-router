@@ -232,6 +232,8 @@
     "advanced": "高级設定",
     "autoUpdate": "啟用自動更新",
     "autoUpdateDescription": "自動下載並安裝應用更新",
+    "launchAtLogin": "系統啟動時自動啟動",
+    "launchAtLoginDescription": "登入時自動啟動 MCP Router，讓 IDE 和智慧代理可以立即連接。支援 macOS、Windows 和 Linux。",
     "showWindowOnStartup": "系統啟動时顯示主視窗",
     "showWindowOnStartupDescription": "当电脑啟動时顯示 MCP Router 主視窗。關閉后将在后台啟動。",
     "loadExternalMCPConfigs": "從外部應用程式載入 MCP 設定",

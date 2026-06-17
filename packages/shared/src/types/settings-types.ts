@@ -55,6 +55,13 @@ export interface AppSettings {
   autoUpdateEnabled?: boolean;
 
   /**
+   * OS起動時にアプリを自動起動するか（ログイン項目への登録）
+   * macOS / Windows / Linux すべてに対応
+   * デフォルト: true
+   */
+  launchAtLogin?: boolean;
+
+  /**
    * OS起動時にアプリのメインウィンドウを表示するか
    * デフォルト: true
    */
@@ -85,6 +92,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   loadExternalMCPConfigs: true,
   analyticsEnabled: true,
   autoUpdateEnabled: true,
+  launchAtLogin: true,
   showWindowOnStartup: true,
   theme: "system",
   cloudSync: {

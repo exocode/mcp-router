@@ -339,14 +339,16 @@ async function initApplication(): Promise<void> {
 
   // 起動時のウィンドウ表示設定を取得
   const settingsService = getSettingsService();
+  let launchAtLogin = true;
   let showWindowOnStartup = true;
   try {
     const currentSettings = settingsService.getSettings();
+    launchAtLogin = currentSettings.launchAtLogin ?? true;
     showWindowOnStartup = currentSettings.showWindowOnStartup ?? true;
     applyThemeSettings(currentSettings.theme);
   } catch (error) {
     console.error(
-      "Failed to load startup visibility preference, defaulting to true:",
+      "Failed to load startup preferences, defaulting to true:",
       error,
     );
   }
@@ -357,7 +359,7 @@ async function initApplication(): Promise<void> {
     ["--hidden", "--minimized"].includes(arg),
   );
 
-  applyLoginItemSettings(showWindowOnStartup);
+  applyLoginItemSettings(launchAtLogin, showWindowOnStartup);
 
   // データベース初期化
   await initDatabase();
