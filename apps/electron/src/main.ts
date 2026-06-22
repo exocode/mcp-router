@@ -95,7 +95,7 @@ const createWindow = ({ showOnCreate = true }: CreateWindowOptions = {}) => {
     minWidth: 800,
     minHeight: 600,
     title: "MCP Router",
-    icon: path.join(__dirname, "assets/icon.png"),
+    icon: path.join(__dirname, "../../../public/images/icon/icon.png"),
     autoHideMenuBar: true,
     show: false,
     webPreferences: {
