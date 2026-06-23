@@ -15,7 +15,6 @@ import {
   IconServer,
   IconPlus,
   IconUpload,
-  IconFilter,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/renderer/utils/tailwind-utils";
@@ -344,38 +343,35 @@ const Home: React.FC = () => {
             <Grid3X3 className="h-4 w-4" />
           </Button>
         </div>
-        <Select
-          value={statusFilter}
-          onValueChange={(v) =>
-            setStatusFilter(v as "all" | "running" | "error" | "stopped")
-          }
+        <div
+          className="flex gap-1"
+          title={t("serverList.filterByStatus", "Filter by status")}
         >
-          <SelectTrigger
-            className="h-8 w-8 p-0 flex items-center justify-center"
-            title={t("serverList.filterByStatus", "Filter by status")}
-          >
-            <IconFilter
-              className={cn(
-                "h-4 w-4",
-                statusFilter !== "all" ? "text-primary" : "",
-              )}
-            />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">
-              {t("serverList.statusAll", "All")}
-            </SelectItem>
-            <SelectItem value="running">
-              {t("serverList.status.running", "Running")}
-            </SelectItem>
-            <SelectItem value="error">
-              {t("serverList.status.error", "Error")}
-            </SelectItem>
-            <SelectItem value="stopped">
-              {t("serverList.status.stopped", "Stopped")}
-            </SelectItem>
-          </SelectContent>
-        </Select>
+          {(
+            [
+              { value: "all", label: t("serverList.statusAll", "All") },
+              {
+                value: "running",
+                label: t("serverList.status.running", "Running"),
+              },
+              { value: "error", label: t("serverList.status.error", "Error") },
+              {
+                value: "stopped",
+                label: t("serverList.status.stopped", "Stopped"),
+              },
+            ] as const
+          ).map(({ value, label }) => (
+            <Button
+              key={value}
+              variant={statusFilter === value ? "default" : "outline"}
+              size="sm"
+              onClick={() => setStatusFilter(value)}
+              className="h-8 px-2.5"
+            >
+              {label}
+            </Button>
+          ))}
+        </div>
         <Button
           variant="outline"
           size="sm"
