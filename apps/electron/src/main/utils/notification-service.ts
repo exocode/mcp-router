@@ -1,6 +1,7 @@
-import { Notification, app } from "electron";
-import * as path from "path";
-import * as fs from "fs";
+import { Notification, app, nativeImage } from "electron";
+// Bundled as a base64 data URL at build time (see webpack.rules.ts), so the
+// notification icon ships with the app instead of relying on a runtime path.
+import notificationIconDataUrl from "../../../public/images/icon/icon.png?inline";
 import { getSettingsService } from "@/main/modules/settings/settings.service";
 
 /**
@@ -120,24 +121,10 @@ export function showServerStatusNotification(
     errorMessage,
   );
 
-  // Try to get icon path
-  let iconPath: string | undefined;
-  try {
-    const iconFile = path.join(
-      __dirname,
-      "../../../public/images/icon/icon.png",
-    );
-    if (fs.existsSync(iconFile)) {
-      iconPath = iconFile;
-    }
-  } catch {
-    // Ignore icon loading errors
-  }
-
   const notification = new Notification({
     title,
     body,
-    icon: iconPath,
+    icon: nativeImage.createFromDataURL(notificationIconDataUrl),
     silent: false,
   });
 
