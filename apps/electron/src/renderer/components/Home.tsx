@@ -364,6 +364,7 @@ const Home: React.FC = () => {
             <Button
               key={value}
               variant={statusFilter === value ? "default" : "outline"}
+              aria-pressed={statusFilter === value}
               size="sm"
               onClick={() => setStatusFilter(value)}
               className="h-8 px-2.5"
