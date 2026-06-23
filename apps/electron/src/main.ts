@@ -1,5 +1,14 @@
-import { app, BrowserWindow, session, shell, nativeTheme } from "electron";
-import path from "node:path";
+import {
+  app,
+  BrowserWindow,
+  session,
+  shell,
+  nativeTheme,
+  nativeImage,
+} from "electron";
+// Bundled as a base64 data URL at build time (see webpack.rules.ts), so the
+// window icon ships with the app instead of relying on a runtime file path.
+import windowIconDataUrl from "../public/images/icon/icon.png?inline";
 import { MCPServerManager } from "@/main/modules/mcp-server-manager/mcp-server-manager";
 import { AggregatorServer } from "@/main/modules/mcp-server-runtime/aggregator-server";
 import { MCPHttpServer } from "@/main/modules/mcp-server-runtime/http/mcp-http-server";
@@ -95,7 +104,7 @@ const createWindow = ({ showOnCreate = true }: CreateWindowOptions = {}) => {
     minWidth: 800,
     minHeight: 600,
     title: "MCP Router",
-    icon: path.join(__dirname, "assets/icon.png"),
+    icon: nativeImage.createFromDataURL(windowIconDataUrl),
     autoHideMenuBar: true,
     show: false,
     webPreferences: {
