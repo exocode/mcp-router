@@ -122,7 +122,9 @@ const config: ForgeConfig = {
   plugins: [
     new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
-      // Dev-only logger port: 9000 is commonly taken (e.g. Docker) -> uncommon default.
+      // Dev-only ports. The defaults (renderer 3000, logger 9000) are commonly
+      // taken (Docker, other dev servers) -> uncommon defaults.
+      port: 9438,
       loggerPort: 9437,
       mainConfig,
       renderer: {
