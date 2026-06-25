@@ -39,6 +39,26 @@ const trimLogs = (entries: ConsoleLogEntry[]) =>
     ? entries.slice(-MAX_LOGS_PER_SERVER)
     : entries;
 
+// Many MCP servers write normal/info output to stderr (banners, "Starting
+// server", etc.), so the stdout/stderr stream is a poor error signal. Classify
+// by content instead: red only for genuine errors, amber for warnings, green
+// for everything else.
+const ERROR_PATTERN =
+  /\b(errors?|exception|fatal|panic|traceback|unhandled|econnrefused|eaddrinuse|enotfound|etimedout|failed|failure)\b/i;
+const WARN_PATTERN = /\b(warn(?:ing)?|deprecat\w*)\b/i;
+
+const LOG_LEVEL_CLASS: Record<"error" | "warn" | "info", string> = {
+  error: "text-red-400",
+  warn: "text-amber-400",
+  info: "text-emerald-300",
+};
+
+const classifyLogLevel = (content: string): "error" | "warn" | "info" => {
+  if (ERROR_PATTERN.test(content)) return "error";
+  if (WARN_PATTERN.test(content)) return "warn";
+  return "info";
+};
+
 const ServerConsoleViewer: React.FC = () => {
   const { t } = useTranslation();
   const { servers } = useServerStore();
@@ -330,23 +350,22 @@ const ServerConsoleViewer: React.FC = () => {
             <div>
               {displayLogs.map((log, index) => {
                 const timestamp = new Date(log.timestamp).toLocaleTimeString();
-                const isError = log.type === "stderr";
+                const colorClass =
+                  LOG_LEVEL_CLASS[classifyLogLevel(log.content)];
                 const serverLabel =
                   selectedServerId === "all" ? `[${log.serverName}]` : "";
 
                 return (
                   <div
                     key={`${log.serverId}-${index}-${log.timestamp}`}
-                    className={`mb-0.5 ${isError ? "text-red-400" : "text-green-400"}`}
+                    className={`mb-0.5 ${colorClass}`}
                     style={{ whiteSpace: "pre-wrap", wordBreak: "break-all" }}
                   >
                     <span className="text-gray-500">{timestamp}</span>
                     {serverLabel && (
-                      <span className="text-blue-400 ml-2">{serverLabel}</span>
+                      <span className="text-sky-400 ml-2">{serverLabel}</span>
                     )}
-                    <span className={`ml-2 ${isError ? "text-red-400" : ""}`}>
-                      {log.content}
-                    </span>
+                    <span className="ml-2">{log.content}</span>
                   </div>
                 );
               })}
