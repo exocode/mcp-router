@@ -472,12 +472,12 @@ const Home: React.FC = () => {
                           return (
                             <div key={server.id}>
                               <div
-                                className="p-4 hover:bg-sidebar-hover cursor-pointer"
+                                className="px-3 py-2 hover:bg-accent/40 cursor-pointer"
                                 onClick={() => toggleServerExpand(server.id)}
                               >
-                                <div className="flex justify-between">
-                                  <div className="flex flex-col">
-                                    <div className="font-medium text-base mb-1 hover:text-primary">
+                                <div className="flex items-center justify-between gap-3">
+                                  <div className="flex flex-row items-center gap-2 min-w-0 flex-1">
+                                    <div className="font-medium text-sm truncate hover:text-primary min-w-0 flex-1">
                                       {server.name}
                                     </div>
 
@@ -489,7 +489,7 @@ const Home: React.FC = () => {
                                           {(server as any).description}
                                         </p>
                                       )}
-                                    <div className="flex flex-wrap gap-2 mb-1">
+                                    <div className="flex flex-nowrap items-center gap-1.5 flex-shrink-0">
                                       {/* Server Type Badge */}
                                       <Badge
                                         variant="secondary"
@@ -567,16 +567,7 @@ const Home: React.FC = () => {
                                         <AlertCircle className="h-4 w-4" />
                                       </button>
                                     )}
-                                    <span className="text-xs text-muted-foreground">
-                                      {server.status === "running"
-                                        ? t("serverList.status.running")
-                                        : server.status === "starting"
-                                          ? t("serverList.status.starting")
-                                          : server.status === "stopping"
-                                            ? t("serverList.status.stopping")
-                                            : t("serverList.status.stopped")}
-                                    </span>
-                                    <div className="h-6 w-12">
+                                    <div className="flex items-center">
                                       <Switch
                                         checked={server.status === "running"}
                                         disabled={
@@ -690,12 +681,12 @@ const Home: React.FC = () => {
                         return (
                           <div
                             key={server.id}
-                            className="p-4 hover:bg-sidebar-hover cursor-pointer"
+                            className="px-3 py-2 hover:bg-accent/40 cursor-pointer"
                             onClick={() => toggleServerExpand(server.id)}
                           >
-                            <div className="flex justify-between">
-                              <div className="flex flex-col">
-                                <div className="font-medium text-base mb-1 hover:text-primary">
+                            <div className="flex items-center justify-between gap-3">
+                              <div className="flex flex-row items-center gap-2 min-w-0 flex-1">
+                                <div className="font-medium text-sm truncate hover:text-primary min-w-0 flex-1">
                                   {server.name}
                                 </div>
                                 {"description" in server &&
@@ -705,7 +696,7 @@ const Home: React.FC = () => {
                                       {(server as any).description}
                                     </p>
                                   )}
-                                <div className="flex flex-wrap gap-2 mb-1">
+                                <div className="flex flex-nowrap items-center gap-1.5 flex-shrink-0">
                                   <Badge variant="secondary" className="w-fit">
                                     {server.serverType === "local"
                                       ? "Local"
@@ -767,16 +758,7 @@ const Home: React.FC = () => {
                                     <AlertCircle className="h-4 w-4" />
                                   </button>
                                 )}
-                                <span className="text-xs text-muted-foreground">
-                                  {server.status === "running"
-                                    ? t("serverList.status.running")
-                                    : server.status === "starting"
-                                      ? t("serverList.status.starting")
-                                      : server.status === "stopping"
-                                        ? t("serverList.status.stopping")
-                                        : t("serverList.status.stopped")}
-                                </span>
-                                <div className="h-6 w-12">
+                                <div className="flex items-center">
                                   <Switch
                                     checked={server.status === "running"}
                                     disabled={

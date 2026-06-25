@@ -63,7 +63,7 @@ export const ServerCardCompact: React.FC<ServerCardCompactProps> = ({
       )}
       onClick={onClick}
     >
-      <CardContent className="p-4">
+      <CardContent className="p-3">
         <div className="flex items-center justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
@@ -107,7 +107,7 @@ export const ServerCardCompact: React.FC<ServerCardCompactProps> = ({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="h-7 w-7"
                 onClick={(e) => {
                   e.stopPropagation();
                   onError();
@@ -130,7 +130,7 @@ export const ServerCardCompact: React.FC<ServerCardCompactProps> = ({
                   : undefined
               }
               onCheckedChange={onToggle}
-              className="data-[state=checked]:bg-primary"
+              className="data-[state=checked]:bg-emerald-500"
             />
 
             <Button

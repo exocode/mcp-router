@@ -41,6 +41,10 @@ const SidebarComponent: React.FC = () => {
   const [updateAvailable, setUpdateAvailable] = useState(false);
   const platformAPI = usePlatformAPI();
 
+  // Emerald accent applied only on the active nav item (single, consistent accent)
+  const navAccent =
+    "data-[active=true]:text-emerald-400 data-[active=true]:font-medium data-[active=true]:shadow-[inset_2px_0_0_#10b981]";
+
   useEffect(() => {
     // Check if an update is available on mount
     platformAPI.packages.system
@@ -73,8 +77,8 @@ const SidebarComponent: React.FC = () => {
           to="/apps/electron/public"
           className="flex items-center no-underline px-2 py-1"
         >
-          <img src={iconImage} className="w-8 h-8 mr-3" alt="Logo" />
-          <h1 className="text-xl font-bold tracking-tight">
+          <img src={iconImage} className="w-7 h-7 mr-2.5" alt="Logo" />
+          <h1 className="text-base font-bold tracking-tight">
             {t("home.title")}
           </h1>
         </Link>
@@ -95,17 +99,16 @@ const SidebarComponent: React.FC = () => {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
+                      className={navAccent}
                       tooltip={t("serverList.title")}
                       isActive={location.pathname === "/servers"}
                     >
                       <Link
                         to="/servers"
-                        className="flex items-center gap-3 py-5 px-3 w-full"
+                        className="flex items-center gap-2.5 py-2 px-2.5 w-full"
                       >
-                        <IconServer className="h-6 w-6" />
-                        <span className="text-base">
-                          {t("serverList.title")}
-                        </span>
+                        <IconServer className="h-[18px] w-[18px]" />
+                        <span className="text-sm">{t("serverList.title")}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -113,15 +116,16 @@ const SidebarComponent: React.FC = () => {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
+                      className={navAccent}
                       tooltip={t("mcpApps.title")}
                       isActive={location.pathname === "/clients"}
                     >
                       <Link
                         to="/clients"
-                        className="flex items-center gap-3 py-5 px-3 w-full"
+                        className="flex items-center gap-2.5 py-2 px-2.5 w-full"
                       >
-                        <IconDeviceDesktop className="h-6 w-6" />
-                        <span className="text-base">{t("mcpApps.title")}</span>
+                        <IconDeviceDesktop className="h-[18px] w-[18px]" />
+                        <span className="text-sm">{t("mcpApps.title")}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -135,10 +139,10 @@ const SidebarComponent: React.FC = () => {
                   {/*    >*/}
                   {/*      <Link*/}
                   {/*        to="/hooks"*/}
-                  {/*        className="flex items-center gap-3 py-5 px-3 w-full"*/}
+                  {/*        className="flex items-center gap-2.5 py-2 px-2.5 w-full"*/}
                   {/*      >*/}
-                  {/*        <IconWebhook className="h-6 w-6" />*/}
-                  {/*        <span className="text-base">{t("hooks.title")}</span>*/}
+                  {/*        <IconWebhook className="h-[18px] w-[18px]" />*/}
+                  {/*        <span className="text-sm">{t("hooks.title")}</span>*/}
                   {/*      </Link>*/}
                   {/*    </SidebarMenuButton>*/}
                   {/*  </SidebarMenuItem>*/}
@@ -149,15 +153,16 @@ const SidebarComponent: React.FC = () => {
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
+                          className={navAccent}
                           tooltip={t("serverDetails.requestLogs")}
                           isActive={location.pathname === "/logs"}
                         >
                           <Link
                             to="/logs"
-                            className="flex items-center gap-3 py-5 px-3 w-full"
+                            className="flex items-center gap-2.5 py-2 px-2.5 w-full"
                           >
-                            <IconActivity className="h-6 w-6" />
-                            <span className="text-base">
+                            <IconActivity className="h-[18px] w-[18px]" />
+                            <span className="text-sm">
                               {t("serverDetails.requestLogs")}
                             </span>
                           </Link>
@@ -166,15 +171,16 @@ const SidebarComponent: React.FC = () => {
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
+                          className={navAccent}
                           tooltip={t("serverConsole.title", "Server Console")}
                           isActive={location.pathname === "/console"}
                         >
                           <Link
                             to="/console"
-                            className="flex items-center gap-3 py-5 px-3 w-full"
+                            className="flex items-center gap-2.5 py-2 px-2.5 w-full"
                           >
-                            <IconTerminal className="h-6 w-6" />
-                            <span className="text-base">
+                            <IconTerminal className="h-[18px] w-[18px]" />
+                            <span className="text-sm">
                               {t("serverConsole.title", "Server Console")}
                             </span>
                           </Link>
@@ -201,13 +207,13 @@ const SidebarComponent: React.FC = () => {
                 <Link
                   to="#"
                   onClick={handleInstallUpdate}
-                  className="flex items-center gap-3 py-5 px-3 w-full"
+                  className="flex items-center gap-2.5 py-2 px-2.5 w-full"
                 >
                   <div className="relative">
-                    <IconDownload className="h-6 w-6" />
+                    <IconDownload className="h-[18px] w-[18px]" />
                     <span className="absolute w-2 h-2 bg-red-500 rounded-full top-0 right-0"></span>
                   </div>
-                  <span className="text-base">
+                  <span className="text-sm">
                     {t("updateNotification.title")}
                   </span>
                 </Link>
@@ -217,15 +223,16 @@ const SidebarComponent: React.FC = () => {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
+              className={navAccent}
               tooltip={t("common.settings")}
               isActive={location.pathname === "/settings"}
             >
               <Link
                 to="/settings"
-                className="flex items-center gap-3 py-5 px-3 w-full"
+                className="flex items-center gap-2.5 py-2 px-2.5 w-full"
               >
-                <IconSettings className="h-6 w-6" />
-                <span className="text-base">{t("common.settings")}</span>
+                <IconSettings className="h-[18px] w-[18px]" />
+                <span className="text-sm">{t("common.settings")}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

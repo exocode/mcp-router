@@ -375,41 +375,39 @@ const McpAppsManager: React.FC = () => {
   })();
 
   return (
-    <div className="space-y-4">
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold">{t("mcpApps.title")}</h2>
-        <p className="text-muted-foreground">{t("mcpApps.description")}</p>
+    <div className="space-y-3">
+      <div className="mb-1">
+        <h2 className="text-xl font-semibold">{t("mcpApps.title")}</h2>
+        <p className="text-sm text-muted-foreground">
+          {t("mcpApps.description")}
+        </p>
       </div>
 
-      {/* カスタムアプリ追加フォーム */}
-      <Card className="mb-4">
-        <CardHeader>
-          <CardTitle>{t("mcpApps.addCustomApp")}</CardTitle>
-          <CardDescription>{t("mcpApps.customAppDescription")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleAddCustomApp} className="flex gap-4 items-end">
-            <div className="flex-1">
-              <Input
-                id="customAppName"
-                value={customAppName}
-                onChange={(e) => setCustomAppName(e.target.value)}
-                placeholder={t("mcpApps.enterAppName")}
-              />
-            </div>
-            <Button type="submit">{t("mcpApps.addCustomApp")}</Button>
-          </form>
-        </CardContent>
-      </Card>
+      {/* カスタムアプリ追加フォーム（スリムなインラインバー） */}
+      <form
+        onSubmit={handleAddCustomApp}
+        className="flex gap-2 items-center mb-1"
+      >
+        <Input
+          id="customAppName"
+          value={customAppName}
+          onChange={(e) => setCustomAppName(e.target.value)}
+          placeholder={t("mcpApps.enterAppName")}
+          className="h-9 max-w-xs"
+        />
+        <Button type="submit" size="sm">
+          {t("mcpApps.addCustomApp")}
+        </Button>
+      </form>
 
       {loading ? (
         <></>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {apps.map((app) => {
             return (
               <Card key={app.name} className="overflow-hidden">
-                <CardHeader>
+                <CardHeader className="p-3 pb-2 space-y-1">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-2">
                       {/* Display icon if available from backend */}
@@ -491,9 +489,9 @@ const McpAppsManager: React.FC = () => {
                   </div>
                   <CardDescription></CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-3 pb-3 pt-0">
                   <div className="space-y-2">
-                    <p className="text-sm break-words">
+                    <p className="text-xs break-words text-muted-foreground">
                       {app.configured
                         ? t("mcpApps.configured")
                         : app.installed
@@ -502,7 +500,7 @@ const McpAppsManager: React.FC = () => {
                     </p>
                   </div>
                 </CardContent>
-                <CardFooter className="flex gap-2 justify-between flex-wrap">
+                <CardFooter className="flex gap-2 justify-between flex-wrap p-3 pt-0">
                   <div>
                     {/* Add How To Use and Delete buttons to the left of the card footer */}
                     <div className="flex gap-2 flex-wrap">

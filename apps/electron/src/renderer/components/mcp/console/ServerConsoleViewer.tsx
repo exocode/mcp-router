@@ -15,7 +15,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@mcp_router/ui";
-import { IconTrash, IconRefresh, IconDownload } from "@tabler/icons-react";
+import {
+  IconTrash,
+  IconRefresh,
+  IconDownload,
+  IconTerminal2,
+} from "@tabler/icons-react";
 import { useServerStore } from "@/renderer/stores";
 
 interface ConsoleLogEntry {
@@ -227,23 +232,15 @@ const ServerConsoleViewer: React.FC = () => {
   );
 
   return (
-    <div className="p-6 h-full flex flex-col">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">
+    <div className="h-full flex flex-col">
+      {/* Compact header + controls in a single bar */}
+      <div className="flex items-center gap-2 mb-3">
+        <IconTerminal2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+        <h1 className="text-sm font-semibold flex-shrink-0">
           {t("serverConsole.title", "Server Console")}
         </h1>
-        <p className="text-muted-foreground">
-          {t(
-            "serverConsole.description",
-            "View console output from all running MCP servers",
-          )}
-        </p>
-      </div>
-
-      {/* Controls */}
-      <div className="flex gap-4 mb-4 items-center">
         <Select value={selectedServerId} onValueChange={setSelectedServerId}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="h-8 w-44 text-xs">
             <SelectValue
               placeholder={t("serverConsole.selectServer", "Select Server")}
             />
@@ -260,44 +257,57 @@ const ServerConsoleViewer: React.FC = () => {
           </SelectContent>
         </Select>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={loadLogs}
-          disabled={loading}
-        >
-          <IconRefresh className="h-4 w-4 mr-2" />
-          {t("common.refresh", "Refresh")}
-        </Button>
+        <div className="ml-auto flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={loadLogs}
+            disabled={loading}
+            title={t("common.refresh", "Refresh")}
+          >
+            <IconRefresh className="h-4 w-4" />
+          </Button>
 
-        <Button variant="outline" size="sm" onClick={handleClearLogs}>
-          <IconTrash className="h-4 w-4 mr-2" />
-          {t("common.clear", "Clear")}
-        </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={handleClearLogs}
+            title={t("common.clear", "Clear")}
+          >
+            <IconTrash className="h-4 w-4" />
+          </Button>
 
-        <Button variant="outline" size="sm" onClick={handleExportLogs}>
-          <IconDownload className="h-4 w-4 mr-2" />
-          {t("serverConsole.export", "Export")}
-        </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={handleExportLogs}
+            title={t("serverConsole.export", "Export")}
+          >
+            <IconDownload className="h-4 w-4" />
+          </Button>
 
-        <label className="flex items-center gap-2 ml-auto">
-          <input
-            type="checkbox"
-            checked={autoScroll}
-            onChange={(e) => setAutoScroll(e.target.checked)}
-            className="rounded"
-          />
-          <span className="text-sm">
-            {t("serverConsole.autoScroll", "Auto-scroll")}
-          </span>
-        </label>
+          <label className="flex items-center gap-1.5 ml-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={autoScroll}
+              onChange={(e) => setAutoScroll(e.target.checked)}
+              className="rounded"
+            />
+            <span className="text-xs text-muted-foreground">
+              {t("serverConsole.autoScroll", "Auto-scroll")}
+            </span>
+          </label>
+        </div>
       </div>
 
       {/* Console Output */}
       <Card className="flex-1 overflow-hidden p-0">
         <div
           ref={logContainerRef}
-          className="h-full overflow-auto p-4 bg-black text-green-400 font-mono text-sm"
+          className="h-full overflow-auto p-3 bg-zinc-950 text-emerald-300 font-mono text-xs"
           style={{ fontFamily: "monospace" }}
         >
           {loading && displayLogs.length === 0 ? (
