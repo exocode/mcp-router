@@ -264,6 +264,8 @@
     "noTokenAvailable": "此应用無可用令牌。只能為具有活躍令牌的應用設定令牌範圍。",
     "enterValidName": "請輸入有效的應用名稱",
     "notInstalled": "未安裝",
+    "showAllApps": "顯示全部應用程式",
+    "showInstalledOnly": "僅已安裝",
     "installed": "已安裝",
     "multipleConfigs": "多個設定",
     "unify": "統一",

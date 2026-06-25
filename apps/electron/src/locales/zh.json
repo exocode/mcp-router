@@ -172,6 +172,8 @@
     "accessControlSaved": "访问控制设置保存成功",
     "enterValidName": "请输入有效的应用名称",
     "notInstalled": "未安装",
+    "showAllApps": "显示全部应用",
+    "showInstalledOnly": "仅已安装",
     "installed": "已安装",
     "multipleConfigs": "多个配置",
     "unify": "统一",

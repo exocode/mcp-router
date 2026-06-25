@@ -171,6 +171,8 @@
     "accessControlSaved": "アクセス設定を保存しました",
     "enterValidName": "有効なアプリ名を入力してください",
     "notInstalled": "未インストール",
+    "showAllApps": "すべて表示",
+    "showInstalledOnly": "インストール済みのみ",
     "installed": "インストール済み",
     "multipleConfigs": "複数の設定",
     "unify": "統一",
