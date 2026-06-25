@@ -109,6 +109,32 @@ const App: React.FC = () => {
     [navigate],
   );
 
+  // Global keyboard shortcuts: Cmd/Ctrl + 1-4 navigate, Cmd+, settings, Cmd+N new server
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (!(e.metaKey || e.ctrlKey) || e.altKey) return;
+      const routesByKey: Record<string, string> = {
+        "1": "/servers",
+        "2": "/clients",
+        "3": "/logs",
+        "4": "/console",
+        ",": "/settings",
+      };
+      const target = routesByKey[e.key];
+      if (target) {
+        e.preventDefault();
+        navigate(target);
+        return;
+      }
+      if (e.key.toLowerCase() === "n" && !e.shiftKey) {
+        e.preventDefault();
+        navigate("/servers/add");
+      }
+    };
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+  }, [navigate]);
+
   // Refresh servers on initial load only
   useEffect(() => {
     refreshServers();

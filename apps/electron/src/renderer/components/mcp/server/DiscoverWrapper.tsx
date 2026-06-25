@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +13,19 @@ import Manual from "./Manual";
 
 const DiscoverWrapper: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  // Escape returns to the server list (consistent with the rest of the app)
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        navigate("/servers");
+      }
+    };
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+  }, [navigate]);
 
   return (
     <div className="space-y-6">

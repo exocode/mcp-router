@@ -17,7 +17,6 @@ import { postMake } from "./forge-hooks";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
-
 const isMac = process.platform === "darwin";
 const hasSignIdentity = !!process.env.PUBLIC_IDENTIFIER;
 const hasNotarizeCreds = !!(
@@ -67,18 +66,20 @@ const config: ForgeConfig = {
     // Set executable name for Linux
     executableName: process.platform === "linux" ? "mcp-router" : undefined,
     // Only sign/notarize on macOS when credentials are available (CI-safe)
-    osxSign: isMac && hasSignIdentity
-      ? {
-          identity: process.env.PUBLIC_IDENTIFIER,
-        }
-      : undefined,
-    osxNotarize: isMac && hasNotarizeCreds
-      ? {
-          appleApiKey: process.env.APPLE_API_KEY || "",
-          appleApiKeyId: process.env.APPLE_API_KEY_ID || "",
-          appleApiIssuer: process.env.APPLE_API_ISSUER || "",
-        }
-      : undefined,
+    osxSign:
+      isMac && hasSignIdentity
+        ? {
+            identity: process.env.PUBLIC_IDENTIFIER,
+          }
+        : undefined,
+    osxNotarize:
+      isMac && hasNotarizeCreds
+        ? {
+            appleApiKey: process.env.APPLE_API_KEY || "",
+            appleApiKeyId: process.env.APPLE_API_KEY_ID || "",
+            appleApiIssuer: process.env.APPLE_API_ISSUER || "",
+          }
+        : undefined,
   },
   rebuildConfig: {
     // Force rebuild native modules for the target architecture
@@ -121,6 +122,8 @@ const config: ForgeConfig = {
   plugins: [
     new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
+      // Dev-only logger port: 9000 is commonly taken (e.g. Docker) -> uncommon default.
+      loggerPort: 9437,
       mainConfig,
       renderer: {
         config: rendererConfig,

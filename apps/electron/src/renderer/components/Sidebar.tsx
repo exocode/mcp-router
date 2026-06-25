@@ -6,14 +6,13 @@ import {
   IconActivity,
   IconDeviceDesktop,
   IconDownload,
-  IconWebhook,
   IconTerminal,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useWorkspaceStore } from "@/renderer/stores";
 import { usePlatformAPI } from "@/renderer/platform-api";
 // @ts-expect-error: Webpack file-loader provides typing for image assets at runtime
-import iconImage from "../../../public/images/icon/icon.png";
+import trayIconImage from "../../../public/images/icon/tray-icon.png";
 import {
   Sidebar,
   SidebarContent,
@@ -77,7 +76,22 @@ const SidebarComponent: React.FC = () => {
           to="/apps/electron/public"
           className="flex items-center no-underline px-2 py-1"
         >
-          <img src={iconImage} className="w-7 h-7 mr-2.5" alt="Logo" />
+          {/* Monochrome mark, themed via foreground color (black on light, white on dark) */}
+          <span
+            role="img"
+            aria-label="MCP Router"
+            className="w-7 h-7 mr-2.5 shrink-0 inline-block bg-foreground"
+            style={{
+              maskImage: `url(${trayIconImage})`,
+              WebkitMaskImage: `url(${trayIconImage})`,
+              maskSize: "contain",
+              WebkitMaskSize: "contain",
+              maskRepeat: "no-repeat",
+              WebkitMaskRepeat: "no-repeat",
+              maskPosition: "center",
+              WebkitMaskPosition: "center",
+            }}
+          />
           <h1 className="text-base font-bold tracking-tight">
             {t("home.title")}
           </h1>

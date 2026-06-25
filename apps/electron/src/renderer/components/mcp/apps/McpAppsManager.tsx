@@ -43,6 +43,7 @@ const McpAppsManager: React.FC = () => {
   const [apps, setApps] = useState<McpApp[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [customAppName, setCustomAppName] = useState<string>("");
+  const [showAllApps, setShowAllApps] = useState<boolean>(false);
   const [servers, setServers] = useState<any[]>([]);
   const [selectedApp, setSelectedApp] = useState<McpApp | null>(null);
   const [selectedServerAccess, setSelectedServerAccess] =
@@ -374,13 +375,36 @@ const McpAppsManager: React.FC = () => {
     });
   })();
 
+  // Hide not-installed apps by default; the toggle reveals every supported app.
+  const installedApps = apps.filter((app) => app.installed);
+  const hiddenAppsCount = apps.length - installedApps.length;
+  const visibleApps = showAllApps ? apps : installedApps;
+
   return (
     <div className="space-y-3">
-      <div className="mb-1">
-        <h2 className="text-xl font-semibold">{t("mcpApps.title")}</h2>
-        <p className="text-sm text-muted-foreground">
-          {t("mcpApps.description")}
-        </p>
+      <div className="mb-1 flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-semibold">{t("mcpApps.title")}</h2>
+          <p className="text-sm text-muted-foreground">
+            {t("mcpApps.description")}
+          </p>
+        </div>
+        {hiddenAppsCount > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="shrink-0"
+            onClick={() => setShowAllApps((v) => !v)}
+          >
+            {showAllApps
+              ? t("mcpApps.showInstalledOnly", {
+                  defaultValue: "Installed only",
+                })
+              : `${t("mcpApps.showAllApps", {
+                  defaultValue: "Show all apps",
+                })} (${hiddenAppsCount})`}
+          </Button>
+        )}
       </div>
 
       {/* カスタムアプリ追加フォーム（スリムなインラインバー） */}
@@ -404,7 +428,7 @@ const McpAppsManager: React.FC = () => {
         <></>
       ) : (
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {apps.map((app) => {
+          {visibleApps.map((app) => {
             return (
               <Card key={app.name} className="overflow-hidden">
                 <CardHeader className="p-3 pb-2 space-y-1">

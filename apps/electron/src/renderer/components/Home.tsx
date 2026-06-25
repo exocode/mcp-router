@@ -191,7 +191,7 @@ const Home: React.FC = () => {
     try {
       await deleteServer(serverToDelete.id);
       toast.success(t("serverDetails.removeSuccess"));
-    } catch (error) {
+    } catch {
       toast.error(t("serverDetails.removeFailed"));
     } finally {
       setDeleteDialogOpen(false);
@@ -275,16 +275,10 @@ const Home: React.FC = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="mb-4 flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setIsHomeSettingsOpen(true)}
-          className="gap-1"
-          title={t("projects.projectSettings", {
-            defaultValue: "Project Settings",
-          })}
-        >
-          <SettingsIcon className="h-4 w-4" />
+        <Button asChild variant="outline" size="sm" className="gap-1">
+          <Link to="/servers/add">
+            <IconPlus className="h-4 w-4" />
+          </Link>
         </Button>
         <div className="w-36">
           <Select
@@ -382,10 +376,16 @@ const Home: React.FC = () => {
         >
           <IconUpload className="h-4 w-4" />
         </Button>
-        <Button asChild variant="outline" size="sm" className="gap-1">
-          <Link to="/servers/add">
-            <IconPlus className="h-4 w-4" />
-          </Link>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setIsHomeSettingsOpen(true)}
+          className="gap-1"
+          title={t("projects.projectSettings", {
+            defaultValue: "Project Settings",
+          })}
+        >
+          <SettingsIcon className="h-4 w-4" />
         </Button>
       </div>
 
