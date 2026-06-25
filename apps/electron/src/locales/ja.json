@@ -114,6 +114,8 @@
     "proFeatures": "Pro機能",
     "preferences": "設定",
     "appearance": "外観",
+    "serverPort": "サーバーポート",
+    "serverPortDescription": "MCPアグリゲーターサーバーのポート。アプリの再起動後に適用されます。",
     "theme": "テーマ",
     "themeLight": "ライト",
     "themeDark": "ダーク",

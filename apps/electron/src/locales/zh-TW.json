@@ -209,6 +209,8 @@
     "title": "設定",
     "authentication": "身份驗證",
     "appearance": "外觀",
+    "serverPort": "伺服器連接埠",
+    "serverPortDescription": "MCP 聚合伺服器的連接埠。重新啟動應用程式後生效。",
     "theme": "主題",
     "themeLight": "淺色",
     "themeDark": "深色",

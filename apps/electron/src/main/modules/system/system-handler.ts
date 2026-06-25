@@ -1,4 +1,5 @@
 import { ipcMain, app, autoUpdater } from "electron";
+import * as net from "net";
 import { commandExists } from "@/main/utils/env-utils";
 import { API_BASE_URL, mainWindow } from "@/main";
 
@@ -70,6 +71,24 @@ export function setupSystemHandlers(): void {
     app.quit();
     return true;
   });
+
+  // Check whether a TCP port is free to bind (used by the Settings port picker)
+  ipcMain.handle(
+    "system:checkPortAvailable",
+    (_, port: number): Promise<boolean> => {
+      if (!Number.isInteger(port) || port < 1 || port > 65535) {
+        return Promise.resolve(false);
+      }
+      return new Promise<boolean>((resolve) => {
+        const tester = net.createServer();
+        tester.once("error", () => resolve(false));
+        tester.once("listening", () => {
+          tester.close(() => resolve(true));
+        });
+        tester.listen(port);
+      });
+    },
+  );
 }
 
 export function getIsAutoUpdateInProgress(): boolean {

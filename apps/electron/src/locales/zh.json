@@ -115,6 +115,8 @@
     "proFeatures": "Pro 功能",
     "preferences": "偏好设置",
     "appearance": "外观",
+    "serverPort": "服务器端口",
+    "serverPortDescription": "MCP 聚合服务器的端口。重启应用后生效。",
     "theme": "主题",
     "themeLight": "浅色",
     "themeDark": "深色",

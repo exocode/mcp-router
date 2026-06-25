@@ -279,8 +279,14 @@ async function initMCPServices(): Promise<void> {
   // AggregatorServerの初期化
   aggregatorServer = new AggregatorServer(serverManager);
 
-  // HTTPサーバーの初期化とスタート
-  mcpHttpServer = new MCPHttpServer(serverManager, 3282, aggregatorServer);
+  // HTTPサーバーの初期化とスタート（ポートは設定から取得、デフォルト 3282）
+  const httpServerPort =
+    getSettingsService().getSettings().httpServerPort ?? 3282;
+  mcpHttpServer = new MCPHttpServer(
+    serverManager,
+    httpServerPort,
+    aggregatorServer,
+  );
   try {
     await mcpHttpServer.start();
   } catch (error) {

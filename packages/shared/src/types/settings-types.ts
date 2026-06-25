@@ -77,6 +77,12 @@ export interface AppSettings {
    * Cloud Syncの状態
    */
   cloudSync?: CloudSyncState;
+
+  /**
+   * MCPアグリゲーターHTTPサーバーのポート番号
+   * デフォルト: 3282
+   */
+  httpServerPort?: number;
 }
 
 /**
@@ -98,4 +104,5 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   cloudSync: {
     enabled: false,
   },
+  httpServerPort: 3282,
 };

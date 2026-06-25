@@ -17,9 +17,12 @@ import { useThemeStore } from "@/renderer/stores";
 import { useAuthStore } from "../../stores";
 import {
   IconBrandDiscord,
+  IconCheck,
   IconCloud,
+  IconLoader2,
   IconLock,
   IconUser,
+  IconX,
 } from "@tabler/icons-react";
 import { electronPlatformAPI as platformAPI } from "../../platform-api/electron-platform-api";
 import { postHogService } from "../../services/posthog-service";
@@ -35,6 +38,11 @@ const Settings: React.FC = () => {
   const [autoUpdateEnabled, setAutoUpdateEnabled] = useState<boolean>(true);
   const [launchAtLogin, setLaunchAtLogin] = useState<boolean>(true);
   const [showWindowOnStartup, setShowWindowOnStartup] = useState<boolean>(true);
+  const [httpServerPort, setHttpServerPort] = useState<number>(3282);
+  const [portInput, setPortInput] = useState<string>("3282");
+  const [portStatus, setPortStatus] = useState<
+    "current" | "checking" | "available" | "in-use" | "invalid"
+  >("current");
   const [isSavingSettings, setIsSavingSettings] = useState(false);
 
   // Cloud Sync state
@@ -91,7 +99,10 @@ const Settings: React.FC = () => {
   // Load app version for display
   useEffect(() => {
     if (window.electronAPI?.getAppVersion) {
-      window.electronAPI.getAppVersion().then(setAppVersion).catch(() => {});
+      window.electronAPI
+        .getAppVersion()
+        .then(setAppVersion)
+        .catch(() => {});
     }
   }, []);
 
@@ -105,12 +116,62 @@ const Settings: React.FC = () => {
         setAutoUpdateEnabled(settings.autoUpdateEnabled ?? true);
         setLaunchAtLogin(settings.launchAtLogin ?? true);
         setShowWindowOnStartup(settings.showWindowOnStartup ?? true);
+        const savedPort = settings.httpServerPort ?? 3282;
+        setHttpServerPort(savedPort);
+        setPortInput(String(savedPort));
       } catch {
         console.log("Failed to load settings, using defaults");
       }
     };
     loadSettings();
   }, []);
+
+  // Live-validate the chosen MCP server port (debounced): green when free,
+  // red when taken/invalid. The currently active port counts as valid.
+  useEffect(() => {
+    const trimmed = portInput.trim();
+    const port = Number(trimmed);
+    if (
+      !/^\d+$/.test(trimmed) ||
+      !Number.isInteger(port) ||
+      port < 1024 ||
+      port > 65535
+    ) {
+      setPortStatus("invalid");
+      return;
+    }
+    if (port === httpServerPort) {
+      setPortStatus("current");
+      return;
+    }
+    let cancelled = false;
+    setPortStatus("checking");
+    const timer = setTimeout(async () => {
+      try {
+        const free = await platformAPI.packages.system.checkPortAvailable(port);
+        if (cancelled) return;
+        if (!free) {
+          setPortStatus("in-use");
+          return;
+        }
+        // Persist the new port; it takes effect after the next app restart.
+        const currentSettings = await platformAPI.settings.get();
+        await platformAPI.settings.save({
+          ...currentSettings,
+          httpServerPort: port,
+        });
+        if (cancelled) return;
+        setHttpServerPort(port);
+        setPortStatus("available");
+      } catch {
+        if (!cancelled) setPortStatus("in-use");
+      }
+    }, 400);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [portInput, httpServerPort]);
 
   // Load Cloud Sync status
   useEffect(() => {
@@ -694,6 +755,55 @@ const Settings: React.FC = () => {
               onCheckedChange={handleAnalyticsToggle}
               disabled={isSavingSettings}
             />
+          </div>
+
+          {/* MCP Server Port */}
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <label className="text-sm font-medium">
+                {t("settings.serverPort", "Server port")}
+              </label>
+              <p className="text-xs text-muted-foreground">
+                {t(
+                  "settings.serverPortDescription",
+                  "Port for the MCP aggregator server. Applies after restarting the app.",
+                )}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                min={1024}
+                max={65535}
+                value={portInput}
+                onChange={(e) => setPortInput(e.target.value)}
+                className="w-[110px]"
+                aria-label={t("settings.serverPort", "Server port")}
+              />
+              <span className="flex w-5 items-center justify-center">
+                {portStatus === "checking" && (
+                  <IconLoader2
+                    className="h-4 w-4 animate-spin text-muted-foreground"
+                    aria-label={t("common.loading", "Loading")}
+                  />
+                )}
+                {(portStatus === "available" || portStatus === "current") && (
+                  <IconCheck
+                    className="h-4 w-4 text-emerald-500"
+                    aria-label={t("settings.portAvailable", "Port available")}
+                  />
+                )}
+                {(portStatus === "in-use" || portStatus === "invalid") && (
+                  <IconX
+                    className="h-4 w-4 text-red-500"
+                    aria-label={t(
+                      "settings.portUnavailable",
+                      "Port unavailable",
+                    )}
+                  />
+                )}
+              </span>
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -61,5 +61,6 @@ export interface PackageAPI {
     installUpdate(): Promise<boolean>;
     onUpdateAvailable(callback: (available: boolean) => void): Unsubscribe;
     onProtocolUrl(callback: (url: string) => void): Unsubscribe;
+    checkPortAvailable(port: number): Promise<boolean>;
   };
 }

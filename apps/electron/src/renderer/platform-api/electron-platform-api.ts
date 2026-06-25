@@ -121,6 +121,8 @@ class ElectronPlatformAPI implements PlatformAPI {
         onUpdateAvailable: (callback) =>
           window.electronAPI.onUpdateAvailable(callback),
         onProtocolUrl: (callback) => window.electronAPI.onProtocolUrl(callback),
+        checkPortAvailable: (port) =>
+          window.electronAPI.checkPortAvailable(port),
       },
     };
 

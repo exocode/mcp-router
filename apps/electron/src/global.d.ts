@@ -76,13 +76,16 @@ declare global {
 
       // Console Logging
       getConsoleLogs: (serverId?: string) => Promise<
-        | Record<string, Array<{
-            serverId: string;
-            serverName: string;
-            timestamp: string;
-            type: "stdout" | "stderr";
-            content: string;
-          }>>
+        | Record<
+            string,
+            Array<{
+              serverId: string;
+              serverName: string;
+              timestamp: string;
+              type: "stdout" | "stderr";
+              content: string;
+            }>
+          >
         | Array<{
             serverId: string;
             serverName: string;
@@ -170,6 +173,7 @@ declare global {
       // App version
       getAppVersion: () => Promise<string>;
       getPlatform: () => Promise<"darwin" | "win32" | "linux">;
+      checkPortAvailable: (port: number) => Promise<boolean>;
 
       // Workspace Management
       listWorkspaces: () => Promise<any[]>;
